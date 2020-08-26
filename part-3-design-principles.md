@@ -246,9 +246,65 @@ The general wisdom is:
 
 ## Chapter 11 - The Dependency Inversion Principle
 
+The basic version of the DIP tells us that our code should depend on
+abstractions and not on concrete implementations.
+- In static languages this means that our class should depend on
+  `Interfaces`, `Abstract Classes` and other abstractions.
+- On dynamic languages, it is harder to point out what a concrete
+  implementation is. However, keep in mind that your code should depend
+  on the *methods* the other classes implement and not on the objects
+  being members of a particular class.
+
+**Why all this?** Because when we depend on a stable abstraction (say a
+Java `Interface`) and the interface changes, all concretions that
+implement it are guaranteed to be updated. Additionally, we can easily
+make changes in a concrete implementation without having to change the
+interface or any of the classes that use it.
+
+However, there is more nuance to this since it is impossible to get rid
+of all DIP violations. Every software at some point needs to depend on a
+concrete implementation. Depending on *non-volatile* concretions like a
+Ruby / Java standard class is not a problem. It is when we depend on
+*volatile* modules that are in active development that we should depend
+on abstractions.
+
+There are 3 specific coding practices that can help us get closer to the
+DIP:
+
+### Coding practice 1: Don't refer to volatile concrete classes
+- Applies to static and dynamic languages.
+- This also strongly constraints the creation of objects and typically
+  enforces the use of `Abstract Factories`.
+
+#### `Abstract Factories`
+Initializing a new object requires our code to directly depend on the
+concrete class of that object. For example:
+
+```ruby
+class Application
+  def initialize(service: nil)
+    # Our code is depending on ConcreteImpl
+    @service = service || ConcreteImpl.new
+  end
+end
+```
+
+The `Abstract Factory` pattern helps our high-level code to depend only
+on abstractions and creates an **architectural boundary** that separates
+the abstract from the concrete.
+
+![abstract-factories][abstract-factories]
+
+### Concrete practice 2: Don't inherit from volatile concrete classes
+
+### Coding practice 3: Don't override concrete functions
+
+
+
+
 [srp-violation-accidental-duplication]: ./images/part-3/srp-violation-accidental-duplication.png
 [srp-violation-solution-1]: ./images/part-3/srp-violation-solution-1.png
 [srp-violation-solution-2]: ./images/part-3/srp-violation-solution-2.png
 [ocp-components-protection-hierarchy]: ./images/part-3/ocp-components-protection-hierarchy.png
 [isp-in-programming-languages]: images/part-3/isp-in-programming-languages.png
-
+[abstract-factories]: images/part-3/abstract-factories.png
