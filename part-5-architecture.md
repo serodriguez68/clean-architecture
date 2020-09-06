@@ -329,7 +329,7 @@ mud.* In reality, it is likely that the internal code also needs some
 vertical layering.
 
 There is nothing intrinsically wrong with a software system that has
-been architected around the idea use use-case services. Problems arise
+been architected around the idea of use-case services. Problems arise
 when teams commit early to a **service-level DECOUPLING MODE** without
 really needing it.
 
@@ -340,6 +340,8 @@ in quotes because the decision of decoupling at the service level and
 deploying in different servers is a **decoupling mode / topology**
 decision, not an architecture.
 
+See "[Are Services Boundaries?](#are-services-boundaries)" for more tips
+on how to architect the relationships between boundaries.
 
 #### Uncle Bob's Preferred Decoupling Mode Strategy
 
@@ -434,3 +436,72 @@ we at least have made this changes **possible.**
   which the business rules have code that is tailored to a particular
   GUI or a particular Persistence technology.
 
+# Chapter 18 - Boundary Anatomy
+
+The boundaries that separate components in a software's architecture
+come in man different forms. This chapter explore the most common types
+of boundaries.
+
+## What is boundary crossing?
+
+In software, boundaries are crossed when a function on one side of the
+boundary calls a function on the other side of the boundary.
+
+Depending on the **decoupling mode**, this call can be an inexpensive
+call to another function in the same project, a call to a function that
+lives in a packaged jar or gem that is imported into our project, a call
+via inter-process communication (e.g sockets or shared memory) or a full
+network call.
+
+## Boundaries and Monoliths
+
+As mention in the [Decoupling Modes](#decoupling-modes) section,
+boundaries can exist even if all the code is in the same project (a
+monolith) using **source-level** decoupling.
+
+Furthermore it is possible to have monoliths with no boundaries. Those
+projects will suffer from develop-ability, maintenance, etc difficulties
+despite having all the code in a single project.
+
+Disciplined partitioning of code into components using boundaries can
+greatly aid developing, testing and deployment of the project.
+
+## Are Threads Boundaries?
+
+> Threads are not architectural boundaries or units of deployment, but
+> rather a way to organize the schedule and order of execution.
+
+The calls that a threaded code makes may be entirely contained within a
+component or spread across multiple components.
+
+## Are Local Processes Boundaries?
+
+Yes, a software that runs different parts in different local processes
+has a strong *physical* boundaries between the processes that are
+enforced by the operating system.
+
+However, don't think that the process boundaries are the only boundaries
+your software needs. To keep your architecture clean, think of a local
+process as an uber-component:
+- Internally, the code for each process should have an architecture that
+  is decomposed into components using the ideas we've studied so far
+  with the boundaries enforced via **source-level** decoupling.
+- At the process-to-process level, the general idea of **plugin**
+  architecture still holds. High-level processes must NOT depend on
+  low-level processes; therefore, high-level processes must not contain
+  the names of physical addresses of low-level process. Low-level
+  processes should act as a **plugin** to the high-level processes.
+
+### Are Services Boundaries?
+
+Yes, it is the strongest boundary. Services assume that all
+communications take place over the network (even if they run on the same
+machine).Communication is very expensive so calls that cross the service
+boundary should be avoided if possible.
+
+The general idea of **plugin** architecture also holds: low-level
+services should act as a plugin to higher level ones.
+
+See
+[The pitfall of micro-services by default](#the-pitfall-of-micro-services-by-default)
+for more information.
