@@ -308,12 +308,17 @@ will change as the project matures. Therefore we need the architecture
 to allow us to decide on this **later** without having to re-build the
 whole system.
 
+Note that as the decoupling mode becomes more strict, things like
+component communication, testing and developing a new features become
+much harder. We should move to stricter decoupling *only* if it is
+really needed.
+
 #### The pitfall of micro-services by default
 
 It has become increasingly popular for teams to default to
-micro-services since day 1 a project.
+micro-services* since day 1 a project.
 
-Dealing with distributed systems and network service boundaries is
+Dealing with distributed systems and network service boundaries is very
 difficult. This is a waste of effort and resources when there is no good
 reason to have two uses cases running in different services.
 
@@ -323,18 +328,31 @@ sufficient and internally the micro-services' code are *big balls of
 mud.* In reality, it is likely that the internal code also needs some
 vertical layering.
 
+There is nothing intrinsically wrong with a software system that has
+been architected around the idea use use-case services. Problems arise
+when teams commit early to a **service-level DECOUPLING MODE** without
+really needing it.
+
+Note *: in the context of this book, *micro-service "architecture"* and
+*service-oriented "architecture"* are the same thing (they only defer on
+a vague definition of lines of code per service). Also "architecture" is
+in quotes because the decision of decoupling at the service level and
+deploying in different servers is a **decoupling mode / topology**
+decision, not an architecture.
+
 
 #### Uncle Bob's Preferred Decoupling Mode Strategy
 
 His preferred strategy is to push decoupling up to the point where
-**service-level** *could* be performed without too much effort if
-necessary.
+**service-level** decoupling *could* be performed without too much
+effort only if it became necessary.
 
 Initially all the code lives in one project, separated by **source code
-level** decoupling. This may be sufficient for the whole lifetime of the
-project.
+level** decoupling. This makes interaction between components easy via
+direct method calls. This may be sufficient for the whole lifetime of
+the project.
 
-If deployment of development issues arise, he extracts whatever use
+If deployment or development issues arise, he extracts whatever use
 cases are causing the issue to **deployment-level** decoupling to fix
 the issues.
 
@@ -347,4 +365,72 @@ decoupling to **deployment** or even **source code** level.
 Changing decoupling modes is tricky and Uncle Bob is NOT advocating for
 systems that can run in any decoupling mode just by changing a
 configuration. The point he is making is that the architecture should
-make the changes of decoupling mode (forward and backward) *possible.*
+make the changes of decoupling mode **possible** in both direction
+(simple to complex and complex to simple).
+
+
+## Chapter 17 - Boundaries: Drawing Lines
+
+> Some of those lines are drawn very early in a project’s life—even
+> before any code is written. Others are drawn much later. Those that
+> are drawn early are drawn for the purposes of deferring decisions for
+> as long as possible, and of keeping those decisions from polluting the
+> core business logic.
+
+**What makes a software difficult to maintain?** Coupling, especially
+coupling to *premature decisions.*
+- *Premature decisions* are decisions that hove nothing to do with the
+  business logic / use cases. E.g. frameworks, data-bases, web servers,
+  libraries , etc.
+
+### Which lines do you draw, and when do you draw them?
+
+> Draw lines between things that matter and things that don’t. The GUI
+> doesn't matter to the business rules, so there should be a line
+> between them. The database doesn't matter to the GUI, so there should
+> be a line between them. The database doesn't matter to the business
+> rules, so there should be a line between them.
+
+Also draw lines between things that change at different times and for
+different reasons. See
+[The Common Closure Principle (CCP)](part-4-component-principles.md#the-common-closure-principle-ccp)
+section for more details.
+
+#### The relationship between the database and the business rules
+
+Often people think that the database is inextricably connected to the
+business rules. This is not true. The business rules only need to know
+that there is a set of functions to fetch and save data, meaning that
+the DB can be hidden behind an interface.
+- Note that in a real application there would be many business rules
+  classes, many databases interfaces and many classes that implement
+  those interfaces to access the database. See
+  [Thinking in Layers](#thinking-in-layers) for an example.
+
+#### The role of the GUI in the system
+
+People often thing that the GUI *is the system* and therefore should be
+developed first. This is not true, the GUI is a simple *IO device*. The
+system is the **set of business rules that drive it** and therefore they
+should be developed first.
+
+
+### The Plugin Architecture - The Foundational Idea of Clean Architecture
+
+![plugin-architecture.png](images/part-5/plugin-architecture.png)
+
+Making the DB and GUI act as plugins to the **business rules** we have
+made it possible to implement and swap different GUIs (e.g web based,
+SOA based, console based) and Databases (SQL, NoSQL, file system).
+
+It is the business rules that determine which operations need to be
+supported by whatever GUI and Persistence mechanism we decide to use and
+it is up to those plugins to implement them.
+
+Making these type of replacements most likely is not going to be
+trivial. The point being made here is that by adopting the plugin idea
+we at least have made this changes **possible.**
+- Changes like these are impossible / impractical to do in systems in
+  which the business rules have code that is tailored to a particular
+  GUI or a particular Persistence technology.
+
