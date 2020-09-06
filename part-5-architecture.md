@@ -505,3 +505,22 @@ services should act as a plugin to higher level ones.
 See
 [The pitfall of micro-services by default](#the-pitfall-of-micro-services-by-default)
 for more information.
+
+# Chapter 19 - Policy and Level
+
+**Clean architecture's** fundamental idea of *higher-level policies
+should not depend on low-level details* is supported on a notion of
+**component level** that we have not explored formally yet.
+
+A possible definition of a **component level** is the minimum number of
+steps needed to reach either the input and the output. The larger the
+number of steps, the higher the level.
+
+**Why is this notion of level important?**
+
+> Higher-level policies—those that are farthest from the inputs and
+> outputs—tend to change less frequently, and for more important
+> reasons, than lower-level policies. Lower-level policies—those that
+> are closest to the inputs and outputs—tend to change frequently, and
+> with more urgency, but for less important reasons.
+
