@@ -524,3 +524,102 @@ number of steps, the higher the level.
 > are closest to the inputs and outputs—tend to change frequently, and
 > with more urgency, but for less important reasons.
 
+
+# Chapter 20 - Business Rules
+
+To divide our app into **business rules (policies)** and plugins, we
+better know what business rules are.
+
+There are several types of business rules. But the simple definition is
+that a business rule is a procedure that helps the business make or save
+money.
+
+## Entities (Application-independent Business Rules)
+
+There are procedures that would exist in the business even if they were
+not automated and had to be executed manually. We call these procedures
+**Critical Business Rules.**
+- e.g. In a Bank, Loans have procedures to calculate interests and make
+  payments.
+
+**Critical Business Rules** need some data to work with. This data would
+also exist even if the system was not automated. We call these
+**Critical Business Data.**
+- e.g. In a Bank, Loan procedures need a loan balance, interest rate,
+  etc.
+
+An entity is an object within our software that represents the union of
+*critical business rules* operating on *critical business data* (i.e.
+data bound to behaviour if you may). For example,the *Loan* entity could
+look like:
+
+| **Loan**           |
+|:-------------------|
+| -principle         |
+| -rate              |
+| -period            |
+| :----------------- |
+| +makePayment()     |
+| +applyInterest()   |
+| +chargeLateFee()   |
+
+- The entity should either hold the *critical business data* OR have
+  very easy access to it.
+- The entity does not know anything about databases, user interfaces or
+  third-party frameworks.
+- In an object-oriented language the entity may be a class, but in other
+  paradigms it can be whatever construct allows to bind data and
+  behaviour together (all programing paradigms have this concept).
+
+
+## Use Cases (Application-specific Business Rules)
+
+They are business rules that make or save money by defining the way the
+*automated* system operates. They wouldn't exist if the business
+operated in a manual environment.
+
+For example, the bank application may not allow the bank clerk to
+proceed to the bank payment estimation screen, until the client's
+contact information and credit score have been gathered and validated.
+
+**Important points about use cases:**
+
+- Each use case is a description of the way the system is used.
+- They specify the input provided by the user, the processing steps and
+  the output returned.
+  - It uses other data elements to represent input data and output data.
+    See [Requests and Response Models](#requests-and-response-models).
+- They specify how and when the
+  [Entities'](#entities-application-independent-business-rules) Critical
+  Business Rules are invoked.
+  - Entities have no knowledge of the use cases that control them.
+    Entities are at a higher-level than use cases and therefore **do not
+    depend** on them.
+- It does NOT describe the user interface. It only specifies the data to
+  be passed in. Use cases don't know if they are part of a web-system, a
+  desktop client, etc.
+- A use case is an object that has one or more functions that implement
+  the application-specific business rules.
+
+![use-case-example.png](images/part-5/use-case-example.png)
+
+
+### Requests and Response Models
+
+Since we want the use case to get input data and return output without
+coupling them to any particular type of I/O device (like the web or the
+DB), we need to introduce simple (non-web related) **Request** and
+**Response** data structures. These structures **should not depend on
+anything**:
+- They should not know about the web or the DB.
+- They should not know about the framework.
+- They should not contain references to Entity objects.
+  - Despite probably sharing data with Entity objects, **the purpose of
+    these two objects is very different and they will change for very
+    different reasons.** Therefore this is
+    [accidental duplication](#the-fear-of-duplication-trap) and it is
+    better to keep them separate.
+
+Not complying with the above will result in your use cases indirectly
+depending on things like the web or the framework.
+
