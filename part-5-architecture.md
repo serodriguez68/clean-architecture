@@ -623,3 +623,29 @@ anything**:
 Not complying with the above will result in your use cases indirectly
 depending on things like the web or the framework.
 
+# Chapter 21 - Screaming Architecture
+
+Software architectures are structures that support the use cases of the
+system. As such, when someone takes a look at the top-level directory of
+a project, it should be evident what the use cases of the system are
+(i.e. what it is about).
+
+The following things are often mistaken as an architecture, but they are
+not:
+- **The Web:** The web is a delivery mechanism (an IO device). Your
+  architecture should treat the fact that it is delivered via the web as
+  a detail.
+- **Frameworks:** frameworks and the structures they impose are not an
+  architecture. Frameworks authors and their community tend to be true
+  believers of them and assume a "let-the-framework-do-everything"
+  position. This is not the position we want to take. Frameworks help,
+  but that comes at a cost that may not be worth paying. **Preserve the
+  use case emphasis of your architecture and develop a strategy in which
+  you can use a framework without it taking over your architecture.**
+
+## Testable Architectures
+
+A use-case centric architecture that has kept the framework and other
+details at arms-length will be easy to unit-test without having to have
+any frameworks, web-servers, databases running.
+
