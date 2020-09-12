@@ -1,4 +1,5 @@
-# Part V - Architecture
+# Part V - 1 - Architecture
+Note: this was divided into 2 files because it was getting too long.
 
 ## Chapter 15 - What is Architecture?
 
@@ -436,13 +437,13 @@ we at least have made this changes **possible.**
   which the business rules have code that is tailored to a particular
   GUI or a particular Persistence technology.
 
-# Chapter 18 - Boundary Anatomy
+## Chapter 18 - Boundary Anatomy
 
 The boundaries that separate components in a software's architecture
 come in man different forms. This chapter explore the most common types
 of boundaries.
 
-## What is boundary crossing?
+### What is boundary crossing?
 
 In software, boundaries are crossed when a function on one side of the
 boundary calls a function on the other side of the boundary.
@@ -453,7 +454,7 @@ lives in a packaged jar or gem that is imported into our project, a call
 via inter-process communication (e.g sockets or shared memory) or a full
 network call.
 
-## Boundaries and Monoliths
+### Boundaries and Monoliths
 
 As mention in the [Decoupling Modes](#decoupling-modes) section,
 boundaries can exist even if all the code is in the same project (a
@@ -466,7 +467,7 @@ despite having all the code in a single project.
 Disciplined partitioning of code into components using boundaries can
 greatly aid developing, testing and deployment of the project.
 
-## Are Threads Boundaries?
+### Are Threads Boundaries?
 
 > Threads are not architectural boundaries or units of deployment, but
 > rather a way to organize the schedule and order of execution.
@@ -474,7 +475,7 @@ greatly aid developing, testing and deployment of the project.
 The calls that a threaded code makes may be entirely contained within a
 component or spread across multiple components.
 
-## Are Local Processes Boundaries?
+### Are Local Processes Boundaries?
 
 Yes, a software that runs different parts in different local processes
 has a strong *physical* boundaries between the processes that are
@@ -492,7 +493,7 @@ process as an uber-component:
   the names of physical addresses of low-level process. Low-level
   processes should act as a **plugin** to the high-level processes.
 
-### Are Services Boundaries?
+#### Are Services Boundaries?
 
 Yes, it is the strongest boundary. Services assume that all
 communications take place over the network (even if they run on the same
@@ -506,7 +507,7 @@ See
 [The pitfall of micro-services by default](#the-pitfall-of-micro-services-by-default)
 for more information.
 
-# Chapter 19 - Policy and Level
+## Chapter 19 - Policy and Level
 
 **Clean architecture's** fundamental idea of *higher-level policies
 should not depend on low-level details* is supported on a notion of
@@ -525,7 +526,7 @@ number of steps, the higher the level.
 > with more urgency, but for less important reasons.
 
 
-# Chapter 20 - Business Rules
+## Chapter 20 - Business Rules
 
 To divide our app into **business rules (policies)** and plugins, we
 better know what business rules are.
@@ -534,7 +535,7 @@ There are several types of business rules. But the simple definition is
 that a business rule is a procedure that helps the business make or save
 money.
 
-## Entities (Application-independent Business Rules)
+### Entities (Application-independent Business Rules)
 
 There are procedures that would exist in the business even if they were
 not automated and had to be executed manually. We call these procedures
@@ -572,7 +573,7 @@ look like:
   behaviour together (all programing paradigms have this concept).
 
 
-## Use Cases (Application-specific Business Rules)
+### Use Cases (Application-specific Business Rules)
 
 They are business rules that make or save money by defining the way the
 *automated* system operates. They wouldn't exist if the business
@@ -604,7 +605,7 @@ contact information and credit score have been gathered and validated.
 ![use-case-example.png](images/part-5/use-case-example.png)
 
 
-### Requests and Response Models
+#### Requests and Response Models
 
 Since we want the use case to get input data and return output without
 coupling them to any particular type of I/O device (like the web or the
@@ -623,7 +624,7 @@ anything**:
 Not complying with the above will result in your use cases indirectly
 depending on things like the web or the framework.
 
-# Chapter 21 - Screaming Architecture
+## Chapter 21 - Screaming Architecture
 
 Software architectures are structures that support the use cases of the
 system. As such, when someone takes a look at the top-level directory of
@@ -643,9 +644,8 @@ not:
   use case emphasis of your architecture and develop a strategy in which
   you can use a framework without it taking over your architecture.**
 
-## Testable Architectures
+### Testable Architectures
 
 A use-case centric architecture that has kept the framework and other
 details at arms-length will be easy to unit-test without having to have
 any frameworks, web-servers, databases running.
-
