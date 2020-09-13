@@ -174,6 +174,14 @@ Uncle Bob explains how this works clearly in the book:
 > data from the ViewModel into the HTML page.
 
 
+Note that this example assumes that we want to maintain strict
+architectural boundaries between the layers and therefore represents an
+ideal case. In
+[Chapter 24 - Partial Boundaries](#chapter-24---partial-boundaries),
+Uncle Bob discusses the cost of maintaining strict boundaries and offers
+some ways of introducing less strict boundaries that *could* become
+strict if needed.
+
 #### Sample Code
 
 The code below contains a possible pseudo-code implementation of the
@@ -324,3 +332,87 @@ not carry any further connection to the database.
 ### Where do calls to external services go?
 
 They follow a similar structure to **Database Gateways.**
+
+
+## Chapter 24 - Partial Boundaries
+
+Fully-fledged strict architectural boundaries result the creation of a
+lot of `interfaces` and `data structure` classes to maintain. Sometimes,
+this can be judged as too complex (over-engineered) or too expensive to
+build in light of the specifics of the project.
+
+For those cases, we might want to introduce a **Partial Boundary**. A
+partial boundary allows us to reduce the complexity (in terms of number
+of files) but ideally still leaves room to upgrade to a strict boundary
+if needed.
+
+Note that all partial boundaries are open to degradation if developers
+are not disciplined. Therefore, there might be some work required to
+upgrade it to a strict boundary.
+
+Uncle Bob offers 3 examples of how to introduce partial boundaries.
+There are many more ways.
+
+### Partial Boundary 1: Use Source Level Decoupling Mode
+
+Of the 3 techniques offered, this is the one that compromises the least
+in terms of boundary strictness.
+
+It is basically doing all the coding work to achieve true
+[Source Level Decoupling](part-5-1-architecture.md#decoupling-modes) but
+not taking the step into
+[Deployment Level Decoupling](part-5-1-architecture.md#decoupling-modes).
+
+Source Level decoupling is significantly cheaper than deployment level
+because there is no multi-package version tracking or release / build
+management burden.
+
+However, since the code is still in the same project, it is easy for
+developers to weaken the boundary by making source code imports that
+cross the boundaries in the wrong direction.
+
+### Partial Boundary 2: Group Service Interfaces or Implementations
+
+This is better explained through an example. Imagine we are implementing
+a `ListAllUsers` use case.
+
+In a strict implementation that separates both vertical and horizontal
+layers, we would declare a `ListAllUsersDataAccessInterface` that
+requires the implementation of `#listUsers`. In turn, we would create a
+`ListAllUsersRepo` that implements `ListAllUsersDataAccessInterface` and
+actually makes the query to the DB. So far we have 3 files.
+
+Now imagine we also want to create the `ListAllAdminUsers` use case. In
+a strict implementation, this will result in another interface and
+another repository files to be created.
+
+We now have 6 files in total (not counting tests). This is perfect
+vertical separation, but a lot of code to maintain.
+
+We could reduce the number of files by for example keeping the interface
+declaration separate but declaring a single `UsersRepository` that
+implements all interfaces.
+
+Vertical separation is lost and moving into deployment level decoupling
+is no longer immediately possible. However, it shouldn't be too hard to
+refactor out back into vertical slices if needed.
+
+We can reduce the file number even more by avoiding the interfaces
+altogether. However, the compromises here are larger and the risk of
+losing control of the boundary is also higher.
+
+![partial-boundaries-grouping-interfaces.png](images/part-5/partial-boundaries-grouping-interfaces.png)
+
+
+### Partial Boundary 3: Reduce Cognitive Load Introducing a Facade
+
+In Part III, we saw how
+[Facades](part-3-design-principles.md#approach-2-use-class-as-facade)
+can be used to reduce the cognitive load of having to deal with many
+small classes.
+
+The next diagram shows that pattern can be used to introduce a partial
+boundary. It also comes with the compromise of boundaries being crossed
+in the wrong direction and risk of losing control of the boundary.
+
+![partial-boundaries-facades.png](images/part-5/partial-boundaries-facades.png)
