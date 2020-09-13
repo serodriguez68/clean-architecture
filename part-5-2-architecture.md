@@ -1,7 +1,9 @@
 # Part V - 2 - Architecture
+
 Note: this was divided into 2 files because it was getting too long.
 
-##  Chapter 22 - The Clean Architecture
+## Chapter 22 - The Clean Architecture
+
 Hexagonal Architecture (aka ports and adapters), DCI, BCE are all
 architecture structures that have this commons set of characteristics
 (they vary a little in their details):
@@ -195,7 +197,7 @@ consider when reading this code:
     [the discussion about option#1 and option#2 on this Stack Overflow post](https://softwareengineering.stackexchange.com/questions/357052/clean-architecture-use-case-containing-the-presenter-or-returning-data)
     for more information about these approaches.
 - The names of the classes were selected to match the diagram. In a real
-application, this names will match concepts from the domain.
+  application, this names will match concepts from the domain.
 
 ##### The Controller Action
 
@@ -242,7 +244,8 @@ class UseCase implements UseCaseInputPort {
     public void doSomething() {
         Data data = this.repository.getData();
         Entity entity = new Entity(data);
-        OutputData outputData = entity.someBusinessRule();
+        Integer someResult = entity.someBusinessRule();
+        OutputData outputData = new OutputDAta(someResult);
         // #present is the Use Case Output Port 
         this.presenter.present(outputData);  
     }
@@ -259,6 +262,10 @@ class Presenter implements UseCaseOutputPort {
        ViewModel viewModel = new ViewModel(date: formattedDate);
        render 'some/template', viewModel
     }
+    
+    private String formatDate(Date date) {
+        // ... formatting
+    }
 }
 ```
 
@@ -269,3 +276,51 @@ class ViewModel {
     }
 }
 ```
+
+## Chapter 23 - Presenters and Humble Objects
+
+### The Humble Object Pattern
+
+This pattern helps us identify and protect architectural boundaries. The
+Clean architecture extensively uses the *Humble object pattern* to do
+just this.
+
+Starting with code that is very hard to test (like a GUI), the pattern
+makes the thing that is hard to test as dumb as possible (i.e. *humble*)
+by pulling out things that are easy to test into a separate class.
+
+For example, a GUI can be split into a *presenter* and a *view* (a form
+of *Humble object*) that is very dumb. This makes it very easy to test
+all the GUI content via the presenter without actually having to render
+the GUI. The view is so dumb that it is not even tested automatically.
+
+### More on Presenters and View Models and Views
+
+`Presenters` format everything and dump the result of that formatting
+into a `View Model` data structure that contains Strings, boolean flags
+and enums.
+
+These are some things that the `Presenter` places into the `View Model`:
+stringified dates, stringified currencies, currency color, labels for
+buttons, if buttons should be disabled or not, menu items, names for
+every radio button, check box and text fields, tables, etc...
+
+The `View` **only** loads data from the view model.
+
+**Note:** in practice, this seems very hard and impractical to implement
+without library assistance. It would require some `Presenter-View
+Model-View` library to help reduce the amount of boilerplate code that
+this will create.
+
+
+### Where do Data Mappers and ORMs go?
+
+They go in the **Database Gateway** layer and are in service of
+implementing the `Data Access Interface` required by the **Use Case**.
+Only a dumb data structure whose format is defined by the use case layer
+crosses the boundary. Needles to say, this data structure object does
+not carry any further connection to the database.
+
+### Where do calls to external services go?
+
+They follow a similar structure to **Database Gateways.**
