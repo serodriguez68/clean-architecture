@@ -140,6 +140,64 @@ Common violations of these are:
   created as a result of a query into the use case (e.g. pass in active
   record objects into the use cases).
 
+### When should I use and not use the Clean Architecture?
+
+Note: This section is not en the book. However, Mr. Martin makes
+reference to this in different parts of the book.
+
+**There is an inherent tradeoff between how easy a project is to change
+and maintain and it's simplicity.** This in turn translates into a
+tradeoff between
+[the Cost of Implementing VS Ignoring Boundaries](#chapter-25---the-cost-of-implementing-vs-ignoring-boundaries).
+
+[Chapter 25 - The Cost of Implementing VS Ignoring Boundaries](#chapter-25---the-cost-of-implementing-vs-ignoring-boundaries)
+gives some high-level guidance on how to use a cost-driven approach to
+determine which boundaries need to be there, which can be
+[partially implemented](#chapter-24---partial-boundaries) and which can
+be ignored. However, we offer some practical guidelines on the types of
+projects that tend to benefit from implementing The Clean Architecture
+VS the types of projects for which it is over-engineered and ends up
+hurting them.
+
+#### When to use it
+
+- Long running multi-year projects that should be able to keep up with
+  technology changes (e.g. changes databases or frameworks).
+- Projects that need to support multiple I/O devices (e.g. web, console
+  and desktop).
+- The project needs to be worked on by multiple teams of developers
+  (e.g. 4+ teams).
+- When you *think* you might need to evolve your decoupling mode into
+  [Service Level / Service / Microservice decoupling](part-5-1-architecture.md#the-pitfall-of-micro-services-by-default)
+  but you want to deffer that decision as much as possible.
+  - This service level decoupling desire should be driven by data of
+    which use cases are used more or are expensive that warrant
+    independent deployment and scalability.
+- You are dealing with a domain that has a high inherent complexity to
+  it.
+- Your project will be subject to a lot of change and you are unsure
+  what that changes will be.
+- The stakes of getting it wrong are high.
+
+Note that we can apply the Clean Architecture idea to *parts* of the
+system to protect business rules from things that are likely to change.
+What is likely to change depends on your business. For example, we could
+protect the business rules from the UI with a strict boundary but accept
+that the changing the backing database is unlikely and therefore we can
+tolerate a less strict
+[partial boundary](#chapter-24---partial-boundaries).
+
+#### When not to use it
+
+- Simple CRUD web-based systems.
+- On domains with little inherent business complexity.
+- The project will ever be worked on by a single small team.
+- The system will not require much change after it is created and
+  released.
+- The team is not **skilled enough or convinced enough**. You may want
+  to run workshops to upskill them but ultimately, if there is no team
+  buy in, this can cause frustration.
+
 ### A web application example
 
 The diagram below shows how the clean architecture could be used in the
@@ -338,8 +396,10 @@ They follow a similar structure to **Database Gateways.**
 
 Fully-fledged strict architectural boundaries result the creation of a
 lot of `interfaces` and `data structure` classes to maintain. Sometimes,
-this can be judged as too complex (over-engineered) or too expensive to
-build in light of the specifics of the project.
+this can be judged as too complex or too expensive to build in light of
+the specifics of the project. See
+[the next chapter](#chapter-25---the-cost-of-implementing-vs-ignoring-boundaries)
+for more information of when to use these.
 
 For those cases, we might want to introduce a **Partial Boundary**. A
 partial boundary allows us to reduce the complexity (in terms of number
@@ -416,3 +476,32 @@ boundary. It also comes with the compromise of boundaries being crossed
 in the wrong direction and risk of losing control of the boundary.
 
 ![partial-boundaries-facades.png](images/part-5/partial-boundaries-facades.png)
+
+
+## Chapter 25 - The Cost of Implementing VS Ignoring Boundaries
+
+This chapter shows an example of how Clean Architecture thinking can be
+applied to a simple game that has increasingly complex requirements and
+how that leads to discovery of potential boundaries that didn't look
+apparent.
+
+The points being made here are:
+- Even for simple programs, we can come up with many architectural
+  boundaries everywhere if we try hard enough.
+- Software architecture has an unfortunate inherent trade-off between
+  the cost of implementing boundaries VS the cost of ignoring them.
+- Implementing a strict boundary when the software is simple and the
+  boundary could be ignored is costly and leads to over-engineering.
+- Implementing a boundary after we have ignored one is costly and risky.
+  Also, permanently ignoring one where it is needed makes the project
+  costly to maintain and change.
+- **So what do we do?** We weigh the costs and risks of implementing vs
+  ignoring to determine where architectural boundaries lie, which should
+  be strict, which can be [partial](#chapter-24---partial-boundaries)
+  and which can be ignored.
+- Note that this is not one time decision. As the project evolves, we
+  watch what things are causing friction in the development and
+  maintainability and could use a boundary.
+  - Our goal is to implement the boundary at the point where **the cost
+    of implementation is less than the cost of ignoring.**
+
