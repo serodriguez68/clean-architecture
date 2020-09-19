@@ -505,3 +505,27 @@ The points being made here are:
   - Our goal is to implement the boundary at the point where **the cost
     of implementation is less than the cost of ignoring.**
 
+
+## Chapter 26 - The Main Component, The Ultimate Detail
+
+> In every system, there is at least one component that creates,
+> coordinates, and oversees the others. I call this component `Main`.
+
+Under the *Clean Architecture*, `Main` is the outer-most layer and is
+the lowest-level plugin to the application. This layer is not depicted
+in the diagram shown in
+[Chapter 22 - The Clean Architecture](#chapter-22---the-clean-architecture).
+
+The job of `Main` is:
+- Create all Factories, Strategies and other global facilities, then
+  hand over control to the high-level portions of the system.
+- The dependency injection framework should inject dependencies into
+  `Main`. Then `Main` should distribute those dependencies just using
+  code (without a framework).
+
+Since main is a plugin, it is possible to have many `Main` components,
+one for each configuration of your app. For example:
+- `Main` for `Dev` another for `Test` and another for `Production`.
+- One `Main` for every deployment region of your business.
+
+
