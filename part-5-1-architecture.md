@@ -1,4 +1,5 @@
 # Part V - 1 - Architecture
+
 Note: this was divided into 2 files because it was getting too long.
 
 ## Chapter 15 - What is Architecture?
@@ -189,8 +190,7 @@ maintainability).
   - If we wanted to achieve perfect vertical layer decoupling, we need
     to separate the horizontal bits of each use case. For example, the
     *add-order* use case has its UI and DB code the is different from
-    the
-  - *delete-order* one.
+    the *delete-order* one.
 - **Horizontal Layers:** related to the functional purpose of the layer
   in the code (e.g persistence).
 
@@ -200,17 +200,17 @@ In any application, some use cases are used far more often than others
 or have stricter performance requirements. The concept of vertical
 separation by use cases enables a powerful idea: if we absolutely needed
 to support high throughput for a particular use case, we already have a
-natural place where to cut without too much change as the software is
+natural place where to cut without too much changes as the software is
 already modularized.
 
-By making the vertical separation is strict without any assumption that
+By making the vertical separation strict, avoiding any assumption that
 other use-cases are accessible via the same machine, use-cases can be
 deployed and scaled independently as *services* / *micro-services*. See
 [Decoupling Modes](#decoupling-modes) for more details.
 
 This idea of vertical separation **does not mean** that *micro-services*
 are the way to go. The point of this section is to illustrate that a
-well though architecture allows us to treat defer decisions about
+well though architecture allows us to defer decisions about
 [Operation Performance](#operation-performance) and **keep our options
 open for when we have more information.**
 
@@ -224,7 +224,7 @@ and the business rules without affecting each other.
 Additionally, if we have good vertical decoupling, we could also arrange
 our teams to work on a `use case` basis and have, for example, a team
 working on `add Order` that never interferes with the team working on
-`deleteOrder`.
+`delete Order`.
 
 **The point is, as long as the horizontal and vertical layers exist, the
 system will support the team organizational needs for the company,
@@ -252,7 +252,7 @@ section. See [Decoupling Modes](#decoupling-modes) for more details.
 
 ### The Fear of Duplication Trap
 
-Many architectures gets damaged because of the fear of duplication.
+Many architectures get damaged because of the fear of duplication.
 
 Duplication is generally considered a bad thing in software. However,
 there is an important distinctions between 2 types of duplication:
@@ -317,7 +317,7 @@ really needed.
 #### The pitfall of micro-services by default
 
 It has become increasingly popular for teams to default to
-micro-services* since day 1 a project.
+micro-services* since day 1 of a project.
 
 Dealing with distributed systems and network service boundaries is very
 difficult. This is a waste of effort and resources when there is no good
@@ -334,7 +334,7 @@ been architected around the idea of use-case services. Problems arise
 when teams commit early to a **service-level DECOUPLING MODE** without
 really needing it.
 
-Note *: in the context of this book, *micro-service "architecture"* and
+Note: in the context of this book, *micro-service "architecture"* and
 *service-oriented "architecture"* are the same thing (they only defer on
 a vague definition of lines of code per service). Also "architecture" is
 in quotes because the decision of decoupling at the service level and
@@ -343,6 +343,11 @@ decision, not an architecture.
 
 See "[Are Services Boundaries?](#are-services-boundaries)" for more tips
 on how to architect the relationships between boundaries.
+
+See
+[Chapter 27 - Services: Great and Small](part-5-2-architecture.md#chapter-27---services-great-and-small)
+for a more extended discussion about Service Oriented "Architectures"
+and Microservices.
 
 #### Uncle Bob's Preferred Decoupling Mode Strategy
 
