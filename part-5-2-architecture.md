@@ -529,3 +529,115 @@ one for each configuration of your app. For example:
 - One `Main` for every deployment region of your business.
 
 
+## Chapter 27 - Services: Great and Small
+
+This chapter expands on the ideas exposed in
+[Chapter 16 - Vertical and Horizontal Layers and Independence](part-5-1-architecture.md#chapter-16---vertical-and-horizontal-layers-and-independence)  
+but purely focused on services (i.e. a service-level decoupling mode). I
+recommend you read that chapter first.
+
+Service-oriented "architectures" and microservices have become popular
+recently due to 2 reasons:
+- Services *seem* to be strongly decoupled from each other. As we shall
+  see, this is only partially true.
+- Services *appear* to support independence of development and
+  deployment. Again, as we shall see, this is only partially true.
+
+### Are Services an Architecture?
+
+Services are really a
+[Decoupling Mode](part-5-1-architecture.md#decoupling-modes), not an
+architecture in itself.
+- Sometimes services *are* architecturally significant. This happens
+  when a well defined architectural component has been decoupled as a
+  service.
+- Applications can have ill-conceived services, where they do not have
+  architectural relevance. In these cases, the system is polluted with
+  expensive network calls between undefined boundaries (e.g. distributed
+  monoliths).
+- Services ***don't have to be** architecturally relevant. There are
+  legitimate reasons to have code running in independent services. This
+  chapter only focuses on services that are architecturally significant.
+
+The point is, the services **do not define the architecture.**
+
+### Are the Benefits of Services Real?
+
+#### The Decoupling Hype
+
+One of the supposed benefits of breaking a system into service is its
+strict decoupling which enforces no shared memory and well defined
+interfaces between services.
+
+This is only partially true:
+- Separate services can still be coupled by the structure of the data
+  they pass to each other. If a field is added to a record in one place,
+  all other services get that data passed in need to change. Also, the
+  meaning of each data field in each service needs to be the same
+  (conceptual coupling).
+- Services that share a database are coupled by both the schema and the
+  "shared memory" that the data represents.
+- The benefits of strictness of network interfaces are true, but this is
+  also true for function calls that have been given the correct
+  visibility attributes.
+
+#### The Independence of Development and Deployment Hype
+
+The points above also mean that the idea of independent development and
+deployment are also only **partially true**. For example, if services A
+and B share the database or the data format that is passed, when Service
+A changes the database schema, then Service B needs to change and the
+deployment needs to be coordinated.
+
+### The Pitfall of Services by Functional Decomposition
+
+A naive strategy for deciding how to divide a system into independent
+services is divide them **by function** (aka functional decomposition).
+For example, in a ride-sharing application like Uber, the engineers
+could create the following microservices:
+- Ride Finder Service: keeps the inventory of all possible rides.
+- Ride Selector Service: Selects the best ride for the user given its
+  constraints on location, cost, time, luxury, etc.
+- Ride Dispatcher Service: Once selected, orders the ride.
+
+This type of decomposition is that it is a **"purely horizontal"**
+division and completely ignores
+[the vertical layers](part-5-1-architecture.md#chapter-16---vertical-and-horizontal-layers-and-independence)  
+that are based on use cases.
+
+The problem with this division is that it is very hard to change in
+light of cross-cutting feature changes (changes that require to touch
+everything from the UI to the DB). For example, if the Uber marketing
+team now wanted the business to offer delivery of small parcels
+(something conceptually very similar to delivering people), the
+engineering team would be forced to modify **every single
+microservice**. Even worse, they face the risk of breaking the **people
+delivery** part of the business while working on the **parcel delivery
+part**.
+
+
+### Services by Vertical Layers
+
+A solution to the problem before is to divide services by vertical
+layers (Use Cases or groups of Use Cases) and have each service contain
+contain all functional concern it needs (all the horizontal layers).
+
+The horizontal layers within each service are separated by architectural
+boundaries and follow the dependency rule.
+
+Note that doing this requires the code to be divided vertically very
+early on. If you are in a situation where you already have microservices
+divided by functional decomposition, transforming the system to
+microservices by vertical decomposition might be impossibly expensive to
+do. However, not all hope is lost.
+
+
+### Distributed Vertical Layers
+
+If you already are in a situation where your system has microservices
+divided by functional decomposition, there are still things you can do
+to make it easier to change in the light of cross-cutting changes.
+The next diagram summarises the idea.
+
+![recovering-from-services-by-functional-decomposition.png](images/part-5/recovering-from-services-by-functional-decomposition.png)
+
