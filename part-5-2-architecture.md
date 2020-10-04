@@ -686,3 +686,54 @@ should naturally become more concrete and specific over time, whereas
 production code should naturally become more abstract and general.
 
 
+## Chapter 29 - Clean Embedded Architecture
+
+> It is not uncommon for embedded software to be denied a potentially
+> long life due to being infected with dependencies on hardware.
+
+Firmware is software that is tightly coupled to the hardware it runs on.
+This coupling results in the need to re-write when the hardware changes.
+
+Hardware changes at a very fast pace. To shield businesses from this,
+firmware engineers should be writing more *software* (code that has been
+isolated from the hardware it runs on) and less *firmware*.
+
+### App-titude Test: The problem with just making it work
+
+A general software good practice is:
+
+> 1. “First make it work.” You are out of business if it doesn't work.
+> 2. “Then make it right.” Refactor the code so that you and others can
+>    understand it and evolve it as needs change or are better
+>    understood.
+> 3. “Then make it fast.” Refactor the code for “needed” performance.
+
+Many engineers stop at "making it work" (aka the app-titude test) and
+never go beyond that.In embedded software in particular, often 1 and 3
+are done together and 2 is never considered.
+
+### The Target-Hardware Bottleneck Problem
+
+> There are many special concerns that embedded developers have to deal
+> with that non-embedded developers do not—for example, limited memory
+> space, real-time constraints and deadlines, limited IO, unconventional
+> user interfaces, and sensors and connections to the real world.
+
+Yes, embedded software has to run in special constrained hardware.
+However, embedded software *development* is not SO special; the
+principles of clean architecture still apply.
+
+In embedded systems, you know you have problems when you can only test
+your code on the target hardware (as opposed to being able to test the
+business rules of your code independent of the hardware). This is known
+as the *target hardware bottleneck problem*. **A clean embedded
+architecture is a testable embedded architecture.**
+
+### Building clean embedded architectures
+
+The rest of this chapter explains some rules for creating clean embedded
+architectures that follow the general ideas of the book (no new content
+is introduced).
+
+I recommend you read the chapter if you are interested in how the clean
+architecture ideas look in the embedded software world.
