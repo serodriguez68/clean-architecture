@@ -410,6 +410,9 @@ Note that all partial boundaries are open to degradation if developers
 are not disciplined. Therefore, there might be some work required to
 upgrade it to a strict boundary.
 
+Note that as a general rule of thumb, code from outer layers should be
+compromised with partial boundaries first.
+
 Uncle Bob offers 3 examples of how to introduce partial boundaries.
 There are many more ways.
 
@@ -463,6 +466,12 @@ losing control of the boundary is also higher.
 
 ![partial-boundaries-grouping-interfaces.png](images/part-5/partial-boundaries-grouping-interfaces.png)
 
+See
+[Chapter 33 - Case Study: Video Sales](part-6-details.md#step-2-create-a-preliminary-component-architecture)
+for a practical example of this partial boundary.
+
+
+
 
 ### Partial Boundary 3: Reduce Cognitive Load Introducing a Facade
 
@@ -471,9 +480,10 @@ In Part III, we saw how
 can be used to reduce the cognitive load of having to deal with many
 small classes.
 
-The next diagram shows that pattern can be used to introduce a partial
-boundary. It also comes with the compromise of boundaries being crossed
-in the wrong direction and risk of losing control of the boundary.
+The next diagram shows that that pattern can be used to introduce a
+partial boundary. It also comes with the compromise of boundaries being
+crossed in the wrong direction and risk of losing control of the
+boundary.
 
 ![partial-boundaries-facades.png](images/part-5/partial-boundaries-facades.png)
 

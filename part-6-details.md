@@ -113,3 +113,45 @@ business rules.
 There are things you will need to marry. Just make sure it is *decision*
 and you understand the extend of the commitment. For example, you will
 need to mary the standard library for any programming language you use.
+
+
+## Chapter 33 - Case Study: Video Sales
+
+A case study that shows how to apply architectural thinking to an
+application.
+
+### Step 1: Use Case Analysis: Identify the actors and their use cases
+
+- Each
+  [actor](part-3-design-principles.md#chapter-7---the-single-responsibility-principle)
+  represents a group of people that will drive changes into the system
+  (they are reasons why the systems needs to change).
+- Partition the system such that changes for one actor does not impact
+  other actors.
+
+![use-case-analysis-example.png](images/part-6/use-case-analysis-example.png)
+
+
+### Step 2: Create a Preliminary Component Architecture
+
+![preliminary-architecture-example.png](images/part-6/preliminary-architecture-example.png)
+
+Note that in this case, the `Gateways` are not divided by use case,
+meaning that this architecture does not follow the strict
+[vertical and horizontal layer division](part-5-1-architecture.md#thinking-in-layers)
+presented before.
+
+This an example of a
+[partial boundary](part-5-2-architecture.md#partial-boundary-2-group-service-interfaces-or-implementations)
+trade-off, made to reduce the project complexity. Note that the rest of
+the components do maintain vertical and horizontal layering and that the
+compromise was made on one of the outer layers (not on the use cases or
+entities).
+
+### Step 3: Verify the Dependency Management
+
+Make sure your preliminary design follows the
+[Dependency Rule](part-5-2-architecture.md#the-dependency-rule):
+- Arrows point towards the higher-level components.
+- All arrows cross boundaries in the same direction.
+
