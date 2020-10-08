@@ -155,3 +155,100 @@ Make sure your preliminary design follows the
 - Arrows point towards the higher-level components.
 - All arrows cross boundaries in the same direction.
 
+## Chapter 34 - The missing chapter
+> Written by Simon Brown
+
+All the advice so far will make you a better engineer. But, the devil is
+in the details, so lets take some time to see how some of this ideas are
+implemented.
+
+### Clean architecture aside, how do people organize code?
+
+#### Package by layer
+
+- Separate code by what it does form the technical perspective, for
+  example `models`, `views` and `controllers`.
+- This is a horizontal-only layering approach. Ideally layers only
+  depend on the next adjacent layer.
+- In Java, layers are often implemented as packages.
+- **Pros:** simple way to get started. Easy to understand.
+- **Cons:**
+  - As software becomes more complex, the pre-established amount of
+    layers is not sufficient. Not all features require all layers.
+  - The project structure does not
+    [scream](part-5-1-architecture.md#chapter-21---screaming-architecture)
+    what the project does.
+  - It is easy for developers to "skip a layer" and still maintain the
+    rule of "all dependencies should point downward". For example, a
+    controller may import a repository directly skipping the
+    interactors. "Skipping a layer" can quickly degrade into big balls
+    of mud.
+
+
+#### Package by feature
+
+- Vertical slicing based on related features, domain concepts or
+  aggregate roots.
+- In Java, this often means that all the code for a vertical slice is
+  placed in a single package.
+- **Pros:**
+  - The project structure screams architecture.
+  - It is easier to find all the code you need to touch if a use case /
+    feature changes, since all is grouped together.
+- **Cons:**
+  - It is often considered a step up from "package by feature", but both
+    are sub-optimal. We can do better.
+
+#### Ports and adapters - package what is inside and what is outside
+
+- Architectures like "ports and adapters", "hexagonal architecture",
+  "boundaries, controllers, entities" all have this organisation
+  strategy.
+- Roughly speaking, all bits of code on a project can be categorized as
+  being "inside" if they are part of the domain business rules, or
+  "outside" if the are infrastructure or details.
+- Things "inside" are independent from technical implementation details
+  such as frameworks and databases.
+- Things "outside" depend on things "inside", not the other way around.
+- An example of packaging in java is shown next.
+
+![example-of-ports-and-adapters-packaging.png](images/part-6/example-of-ports-and-adapters-packaging.png)
+
+#### Simon Brown's Package by Component
+
+This is Simon Brown's preference on how to organize code It uses a
+slightly different definition of "component" than Uncle Bob's.
+- For Uncle Bob, a "component" is a fine grained grouping of
+  functionality that, if needed *could* be packaged into a single jar
+  file each. The *actual* division of components into packages is not
+  prescribed by Uncle Bob and left up to the engineers to figure out
+  what makes sense for their application (although he gives some
+  pointers
+  [here](part-5-1-architecture.md#uncle-bobs-preferred-decoupling-mode-strategy)).
+  See
+  [the preliminary component architecture above](#step-2-create-a-preliminary-component-architecture)
+  fo an example of what he means by components.
+- For Simon, "components" are coarser and the concept is much more tied
+  up to an actual suggested Java package division strategy.
+
+Simon's "package by component" does not contradict the ideas from Clean
+Architecture. His idea represent a practical implementation of how to
+divide code into Java packages in a way in which the **package
+visibility classes and the compiler enforce the architecture.**
+
+The problems he is trying to solve are:
+- In the "package by layer", "package by feature" and to some extent in
+  the "ports and adapters" packaging strategies there is nothing
+  stopping a developer from "skipping a layer" and doing something like
+  importing the `OrdersRepository` in the `OrdersController`.
+- To avoid the above to happen, teams often rely on discipline (but we
+  know how that goes) or extra static analysis tools to detect when the
+  intended architecture has been violated.
+  - Static analysis tools work, but sometimes extend the feedback cycle
+    too much.
+
+The next image illustrates Simon's "package by component" strategy.
+
+![package-by-component.png](images/part-6/package-by-component.png)
+
+
