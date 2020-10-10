@@ -155,7 +155,7 @@ Make sure your preliminary design follows the
 - Arrows point towards the higher-level components.
 - All arrows cross boundaries in the same direction.
 
-## Chapter 34 - The missing chapter
+## Chapter 34 - The missing chapter - Actual implementation details of an architecture
 
 > Written by Simon Brown
 
