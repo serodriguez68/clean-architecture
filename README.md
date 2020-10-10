@@ -93,7 +93,7 @@ dogmatic.
 **Disclaimer:** this is my opinion. There is no reference about these
 topics in the book.
 
-####  If you are just starting out your programming journey
+###  If you are just starting out your programming journey
 
 If you are still getting comfortable with building applications using a
 framework like Rails, Django, Spring or Laravel, you probably won't
@@ -103,7 +103,7 @@ I recommend you put this on your reading list and come back later. The
 ideas in here won't become dated.
 
 
-#### If have already worked on non-example applications but are just starting to consider software architecture as "a thing"
+### If have already worked on non-example applications but are just starting to consider software architecture as "a thing"
 
 If it is still early in your career but you have already built at least
 one production application on your own or with a small team, you will
@@ -119,7 +119,7 @@ I recommend you go for **pathway 2** and if you like what you see read
 the whole thing.
 
 
-#### If you are proficient at developing software "the framework's way"
+### If you are proficient at developing software "the framework's way"
 
 If you are very comfortable with one framework, fully embrace it's way
 of organising code and have found workarounds to reduce every possible
@@ -133,7 +133,7 @@ gain a very different perspective about building software and
 representing business logic in code.
 
 
-#### If you are already fighting the framework
+### If you are already fighting the framework
 
 You will gain some insight on how to code in a way you actually control
 your code (as opposed to the framework controlling it) and on using the
@@ -145,7 +145,7 @@ you will now know how to limit the blast radius of the fight.
 Go for **pathway 2.**
 
 
-#### If you have already lost control of a large scale project
+### If you have already lost control of a large scale project
 
 If you already work with multiple people maintaining a
 [Big Ball of Mud](http://www.laputan.org/mud/), this book will help you
@@ -157,7 +157,7 @@ important bits from the ball.
 Go for **pathway 2 or 1.**
 
 
-#### If you have been bitten by the dark side of micro-services
+### If you have been bitten by the dark side of micro-services
 
 If you ended up with a **distributed monolith** and are having difficulties
 coordinating deployments between services that are coupled, you will
@@ -172,12 +172,12 @@ conditions demand it.
 Go for **pathway 2.**
 
 
-#### If you are a seasoned veteran that just wants to know what is it about
+### If you are a seasoned veteran that just wants to know what is it about
 
 Go for **pathway 3.**
 
 
-#### If like the history of software and computing
+### If like the history of software and computing
 
 The book is packed with interesting context on the history of
 programming languages and hardware. Go for **pathway 1.**
@@ -197,7 +197,7 @@ go to Mr. Martin.
 Mr. Martin has been involved in multiple controversies lately. My
 intentions with this repo are to help others on their software
 architecture journey and to provide an objective summary of the book's
-content. Please don't involve me in these controversies for summarizing
-a book.
+content. Please don't associate me in these controversies for
+summarizing a book.
 
 
