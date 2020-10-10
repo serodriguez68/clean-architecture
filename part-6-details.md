@@ -156,6 +156,7 @@ Make sure your preliminary design follows the
 - All arrows cross boundaries in the same direction.
 
 ## Chapter 34 - The missing chapter
+
 > Written by Simon Brown
 
 All the advice so far will make you a better engineer. But, the devil is
@@ -164,7 +165,7 @@ implemented.
 
 ### Clean architecture aside, how do people organize code?
 
-#### Package by layer
+#### Strategy 1: Package by layer
 
 - Separate code by what it does form the technical perspective, for
   example `models`, `views` and `controllers`.
@@ -185,7 +186,7 @@ implemented.
     of mud.
 
 
-#### Package by feature
+#### Strategy 2: Package by feature
 
 - Vertical slicing based on related features, domain concepts or
   aggregate roots.
@@ -199,7 +200,7 @@ implemented.
   - It is often considered a step up from "package by feature", but both
     are sub-optimal. We can do better.
 
-#### Ports and adapters - package what is inside and what is outside
+#### Strategy 3: Ports and adapters
 
 - Architectures like "ports and adapters", "hexagonal architecture",
   "boundaries, controllers, entities" all have this organisation
@@ -211,10 +212,19 @@ implemented.
   such as frameworks and databases.
 - Things "outside" depend on things "inside", not the other way around.
 - An example of packaging in java is shown next.
+- **Pros:**
+  - Good encapsulation that naturally follows the
+    [horizontal and vertical](part-5-1-architecture.md#thinking-in-layers)
+    layering.
+- **Cons:**
+  - Will lead to a large number of packages.
+  - It is still technically possible for the `OrdersController` to
+    import the `Orders<I>` skipping the `OrdersService<I>` (more on this
+    on the next section).
 
 ![example-of-ports-and-adapters-packaging.png](images/part-6/example-of-ports-and-adapters-packaging.png)
 
-#### Simon Brown's Package by Component
+#### Strategy 4: Simon Brown's Package by Component
 
 This is Simon Brown's preference on how to organize code It uses a
 slightly different definition of "component" than Uncle Bob's.
@@ -228,22 +238,25 @@ slightly different definition of "component" than Uncle Bob's.
   See
   [the preliminary component architecture above](#step-2-create-a-preliminary-component-architecture)
   fo an example of what he means by components.
-- For Simon, "components" are coarser and the concept is much more tied
-  up to an actual suggested Java package division strategy.
+- For Simon, "components" are coarser and the concept is much more
+  related to an actual suggested Java package division strategy for code
+  organisation an the usage of **package visibility modifiers** to
+  **enforce the architecture and encapsulation.**
 
 Simon's "package by component" does not contradict the ideas from Clean
 Architecture. His idea represent a practical implementation of how to
-divide code into Java packages in a way in which the **package
-visibility classes and the compiler enforce the architecture.**
+divide code into Java packages.
 
 The problems he is trying to solve are:
-- In the "package by layer", "package by feature" and to some extent in
-  the "ports and adapters" packaging strategies there is nothing
-  stopping a developer from "skipping a layer" and doing something like
-  importing the `OrdersRepository` in the `OrdersController`.
-- To avoid the above to happen, teams often rely on discipline (but we
-  know how that goes) or extra static analysis tools to detect when the
-  intended architecture has been violated.
+- In the "package by layer", "package by feature" and "ports and
+  adapters" packaging strategies there is nothing stopping a developer
+  from "skipping a layer" and doing something like importing the
+  `OrdersRepository<I>` in the `OrdersController`.
+- To avoid problems like this to happen, teams often rely on discipline
+  (but we know how that goes) or extra static analysis tools to detect
+  when the intended architecture has been violated. He argues that the
+  best approach to enforce this architectural principle is via the
+  compiler.
   - Static analysis tools work, but sometimes extend the feedback cycle
     too much.
 
@@ -251,4 +264,84 @@ The next image illustrates Simon's "package by component" strategy.
 
 ![package-by-component.png](images/part-6/package-by-component.png)
 
+##### Trade-offs
 
+Compared to "ports and adapters", trade-offs a little bit of the
+strictness in the
+[horizontal](part-5-1-architecture.md#thinking-in-layers) layering for
+having less packages and making it impossible to import the wrong thing
+from the `OrdersController`.
+- Less packages = easier to understand and deploy. All the code needed
+  to make the `OrdersComponent` work travels together.
+- Cheat-proof: It is impossible to import the `OrdersRepository<I>` from
+  the controller.
+- Swapping with arbitrary implementations of the `OrdersRepository<I>`
+  is no longer possible, although the code still maintains the proper
+  separation of concerns internally, so it shouldn't be hard.
+
+#### More on the strategies: Organization VS Encapsulation
+
+This section extends the previous adding a new optic: the usage of
+package visibility modifiers.
+
+Using packages to organize code and not using the visibility modifiers
+to only make public what strictly needs to be public is equivalent to
+just packages as folders to organize code.
+
+In the scenario where everything is public there is no real
+encapsulation difference between the "package by layer", "package by
+feature", "ports and adapters" and "packaged by component" strategies.
+Sure, the code organisation might *look* a little different but the
+encapsulation is non-existent and the compiler does not help you to
+enforce the architecture.
+
+![all-public-packages.png](images/part-6/all-public-packages.png)
+
+When package visibility is used to limit what is `public`, it becomes
+clearer that different "package by X" strategies provide different
+levels of architecture enforcement via the compiler.
+
+![package-visibility-to-enforce-architecture.png](images/part-6/package-visibility-to-enforce-architecture.png)
+
+- "*Package by layer*": it is possible for the `OrdersController`
+  package to import the `OrdersRepository<Interface>`, breaking the
+  architecture.
+- "*Package by feature*": the `OrdersController` is the **only**
+  entrypoint into the orders functionality. This may or may not be
+  desirable. For example, if we want to have a `WebOrdersController` and
+  a `MobileOrdersController`, then this packaging strategy does not
+  work.
+- "*Ports and adapters*": has sound vertical and horizontal layering. It
+  is still technically possible for the `OrdersController` to import the
+  `Orders<I>` skipping the `OrdersService<I>`.
+- "*Package by component*": has sound encapsulation and the compiler can
+  help us enforce the architecture. It is impossible for anything
+  outside to directly import the `OrdersRepository<I>`. The compiler
+  enforces this architectural principle.
+
+
+#### Bottom line on the strategies
+
+
+"Ports and adapter" and "package by components" are the most sound
+strategies of the ones presented. There are pros and cons of each.
+
+**"Ports and adapters"** has stricter horizontal and vertical layering.
+However, with more packages comes more build complexity. It, also leaves
+open the possibility for code in the "outside" to import other code
+"outside", like a controller importing a "repository". This is not what
+we want architecturally and the compiler cannot help us.
+
+**"Package by component"** avoid the "outside code importing outside
+code" problem and uses the compiler to enforce that. It also reduces the
+number of packages to deal with. However, it has slightly weaker
+horizontal layering because the repositories get packaged together with
+the business logic objects.
+- Note that internally, the separation of concerns is still very much
+  respected.
+
+#### Final note
+
+**All of the above refers to the organization withing a single
+(monolithic) applications.** However, if using micro-services, the same
+principles can apply to the code organisation within the service.
