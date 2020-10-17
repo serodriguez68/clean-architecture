@@ -276,8 +276,7 @@ public void controllerAction(Params params) {
     UseCase useCase = new UseCase(presenter, repository);
 
     InputData inputData = new InputData(name: params.name, email: params.email);
-    // This assumes that the injected presenter takes care of rendering 
-    the view.
+    // This assumes that the injected presenter takes care of rendering the view.
     useCase.doSomething(inputData); // Usage of the input port
 } 
 ```
@@ -301,7 +300,7 @@ class UseCase implements UseCaseInputPort {
     private Repository repository;
     private Presenter presenter;
 
-    public UseCase(Repository repository, Presenter presenter) {
+    public UseCase(Repository repository, UseCaseOutputPort presenter) {
         this.repository = repository; // Implements Data Access Interface
         this.presenter = presenter;
     }
