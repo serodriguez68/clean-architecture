@@ -197,7 +197,7 @@ implemented.
   - It is easier to find all the code you need to touch if a use case /
     feature changes, since all is grouped together.
 - **Cons:**
-  - It is often considered a step up from "package by feature", but both
+  - It is often considered a step up from "package by layer", but both
     are sub-optimal. We can do better.
 
 #### Strategy 3: Ports and adapters
