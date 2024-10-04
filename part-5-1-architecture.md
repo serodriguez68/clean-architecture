@@ -189,7 +189,7 @@ maintainability).
   other, therefore, they should be protected from each other.
   - If we wanted to achieve perfect vertical layer decoupling, we need
     to separate the horizontal bits of each use case. For example, the
-    *add-order* use case has its UI and DB code the is different from
+    *add-order* use case has its UI and DB code that is different from
     the *delete-order* one.
 - **Horizontal Layers:** related to the functional purpose of the layer
   in the code (e.g persistence).
